@@ -21,10 +21,10 @@ int fra=40016.3372; //frecuencia del receptor cuando se acerca: 40016.3372Hz
 int frl=39983.6627; //frecuencia del receptor cuanod se aleja: 39983.6627Hz
 int vR=0.1405; //velocidad del receptor: 0.1405 m/s
 int vF=0.1404; //velocidad del emisor: 0.1404 m/s
-int veR=0;
-int veF=0;
-int frRc=0;
-int frRa=0;
+int veR=0; //velocidad del receptor calculada para el caso
+int veF=0; //velocidad del emisor calculada para el caso
+int frRc=0; //frecuencia del receptor acercandose
+int frRa=0; //frecuencia del receptor alejandose
 
 void setup() { 
  pinMode(pinEcho, INPUT);
@@ -51,23 +51,16 @@ void loop() {
 
    distancia = tiempo/59;
    //distancia = tiempo*(349)/2*100;
-  /*
-   v=344; //velocidad del sonido: 344 m/s
-   ff=40000; //freceuncia del foco: 40000Hz
-   fra=40016.3372; //frecuencia del receptor cuando se acerca: 40016.3372Hz
-   frl=39983.6627; //frecuencia del receptor cuanod se aleja: 39983.6627Hz
-   vR=0.1405; //velocidad del receptor: 0.1405 m/s
-   vF=0.1404; //velocidad del emisor: 0.1404 m/s
-*/
+  
    lcd.setCursor(0,1);
    lcd.print("Distancia= ");
    lcd.print(distancia);
    lcd.print(" [cm]");
 
-   Caso1();
-   Caso2();
-   Caso3();
-   //delay(1000);
+   Caso1(); //Fuente y receptor movil
+   Caso2(); //Fuente en movimiento, receptor en reposo
+   Caso3(); //Fuente en reposo, receptor en movimiento
+   
 }
 
 void Caso1()
@@ -100,11 +93,6 @@ void Caso1()
       lcd.print(frRa);
       lcd.print(" [Hz]");
       delay(3000);
-      //lcd.setCursor(5,1);
-      //delay(3000);
-      //lcd.clear();
-      //lcd.print("Distancia: ");
-      //lcd.print(distancia);
     }
   }
 
@@ -114,7 +102,7 @@ void Caso1()
     if (estadoBoton2 ==1)
     {
       veF=v-((v*ff)/fra);
-      //veR=((fra*(v+veF))/ff)-v;
+      
       frRc=(v/(v-veF))*ff;
       frRa=(v/(v+veF))*ff;
       
@@ -134,14 +122,6 @@ void Caso1()
       lcd.print(frRa);
       lcd.print(" [Hz]");
       delay(3000);
-      //lcd.setCursor(0,1);
-      /*lcd.print("Velocidad del receptor: ");
-      lcd.print(veR);
-      lcd.setCursor(5,1);
-      delay(3000);
-      lcd.clear();
-      lcd.print("Distancia: ");
-      lcd.print(distancia);*/
     }
   }
 
@@ -150,11 +130,10 @@ void Caso1()
     int estadoBoton3 = digitalRead (boton3);
     if (estadoBoton3 ==1)
     {
-      //veF=((ff*(v+vR))-fra*v)/fra;
+      
       veR=v*((fra/ff)-1);
       frRc=((v+veR)/v)*ff;
-      frRa=((v-veR)/v)*ff;
-     
+      frRa=((v-veR)/v)*ff;     
       
       lcd.home();
       lcd.print("Velocidad del receptor: ");
@@ -172,12 +151,5 @@ void Caso1()
       lcd.print(frRa);
       lcd.print(" [Hz]");
       delay(3000);
-      /*lcd.print("Velocidad del receptor: ");
-      lcd.print(veR);
-      lcd.setCursor(5,1);
-      delay(3000);
-      lcd.clear();
-      lcd.print("Distancia: ");
-      lcd.print(distancia);*/
     }
   }
